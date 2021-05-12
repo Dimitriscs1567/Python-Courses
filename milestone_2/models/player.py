@@ -3,7 +3,7 @@ class Player():
         self.cards = []
 
     def __str__(self):
-        raise NotImplementedError("Function __str__ must be implemented")
+        return "    ".join(list(map(lambda card: str(card), self.cards)))
 
     def play(self):
         raise NotImplementedError("Function play must be implemented")

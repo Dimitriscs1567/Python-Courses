@@ -14,3 +14,9 @@ class Card():
                     return 1
                 else:
                     return 10
+
+    def hidePrint():
+        return f" ____\n|    |\n| NO |\n|____|"
+
+    def __str__(self) -> str:
+        return f" ____\n|    |\n| {self.name} |\n|____|"

@@ -1,9 +1,10 @@
 import sys
-sys.path.append('milestone_2/models')
+sys.path.append("milestone_2/models")
 
 from models.card import Card
 from models.human import Human
 from models.dealer import Dealer
+from helpers import deal, askForAnotherGame
 
 deck = [
     Card("A*"), Card("A#"), Card("A-"), Card("A+"),
@@ -24,4 +25,10 @@ deck = [
 human = Human()
 dealer = Dealer()
 
-print(human)
+playing = True
+
+while playing:
+    deal(human, dealer, deck)
+    print(human)
+    print(dealer)
+    playing = askForAnotherGame()
