@@ -2,12 +2,6 @@ class Player():
     def __init__(self):
         self.cards = []
 
-    def __str__(self):
-        return "    ".join(list(map(lambda card: str(card), self.cards)))
-
-    def play(self):
-        raise NotImplementedError("Function play must be implemented")
-
     def calculate(self):
         score = 0
         hasAce = False
@@ -26,3 +20,22 @@ class Player():
     def dealCards(self, *cards):
         for card in cards:
             self.cards.append(card)
+
+    def __str__(self):
+        result = ""
+        for i in range(4):
+            for card in self.cards:
+                if i==0:
+                    result += " ____     "
+                elif i==1:
+                    result += "|    |    "
+                elif i==2:
+                    result += f"| {card.name} |    " if len(card.name) == 2 else f"|{card.name} |    "
+                elif i==3:
+                    result += "|____|    "
+            
+            result += "\n"
+        
+        result += f"Score: {self.calculate()}"
+
+        return result

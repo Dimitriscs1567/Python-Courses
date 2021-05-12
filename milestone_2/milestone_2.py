@@ -1,34 +1,58 @@
 import sys
 sys.path.append("milestone_2/models")
 
-from models.card import Card
-from models.human import Human
-from models.dealer import Dealer
-from helpers import deal, askForAnotherGame
+from data import Data
 
-deck = [
-    Card("A*"), Card("A#"), Card("A-"), Card("A+"),
-    Card("2*"), Card("2#"), Card("2-"), Card("2+"),
-    Card("3*"), Card("3#"), Card("3-"), Card("3+"),
-    Card("4*"), Card("4#"), Card("4-"), Card("4+"),
-    Card("5*"), Card("5#"), Card("5-"), Card("5+"),
-    Card("6*"), Card("6#"), Card("6-"), Card("6+"),
-    Card("7*"), Card("7#"), Card("7-"), Card("7+"),
-    Card("8*"), Card("8#"), Card("8-"), Card("8+"),
-    Card("9*"), Card("9#"), Card("9-"), Card("9+"),
-    Card("10*"), Card("10#"), Card("10-"), Card("10+"),
-    Card("J*"), Card("J#"), Card("J-"), Card("J+"),
-    Card("Q*"), Card("Q#"), Card("Q-"), Card("Q+"),
-    Card("K*"), Card("K#"), Card("K-"), Card("K+"),
-]
+def playerTurn(data: Data):
+    data.print(True)
+    score = data.human.calculate()
+    if score >= 21:
+        return score
 
-human = Human()
-dealer = Dealer()
+    choice = input("Do you want to get another card? (y, n): ")
+    another = choice == "y"
+
+    while another:
+        data.dealCardHuman()
+        data.print(True)
+        score = data.human.calculate()
+        if score >= 21:
+            return score
+
+        choice = input("Do you want to get another card? (y, n): ")
+        another = choice == "y"
+
+    return score
+
+def dealerTurn(data: Data, playerScore: int):
+    score = data.dealer.calculate()
+
+    while score < playerScore and score < 21:
+        data.dealCardDealer()
+        score = data.dealer.calculate()
+
+    data.print(False)
+    return score
+
+def askForAnotherGame():
+    choice = input("Do you want to play another game (y-n)? ")
+    return choice.lower() == "y"
 
 playing = True
 
 while playing:
-    deal(human, dealer, deck)
-    print(human)
-    print(dealer)
+    gameData = Data()
+    gameData.initDeal()
+    
+    playerScore = playerTurn(gameData)
+    if playerScore < 22:
+        dealerScore = dealerTurn(gameData, playerScore)
+    else:
+        gameData.print(False)
+
+    if playerScore < 22 and playerScore > dealerScore:
+        print("You have won!!!")
+    else:
+        print("The dealer won!!!")
+
     playing = askForAnotherGame()
