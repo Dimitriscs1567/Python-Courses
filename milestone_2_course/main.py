@@ -1,8 +1,11 @@
+import sys
+sys.path.append("milestone_2_course/models")
+
 from random import shuffle
 from models.dealer import Dealer
 from models.player import Player
 from models.card import Card
-from helpful_functions import dealCards
+from helpful_functions import askForAnotherGame, dealCards, dealerTurn, playerTurn, printBoard
 
 
 deck = [
@@ -21,17 +24,34 @@ deck = [
     Card("K*"), Card("K#"), Card("K-"), Card("K+"),
 ]
 
-player = Player()
-dealer = Dealer()
 playing = True
 
 while playing:
+    player = Player()
+    dealer = Dealer()
+
     shuffle(deck)
     dealCards(player, dealer, deck)
+
+    printBoard(player, dealer, True)
+
     deckIndex = 4
-    print(dealer.cards)
-    # Player Turn
-    # Dealer Turn
-    # Winning Condition
-    # Cheack if player wants another game
-    playing = False
+    deckIndex = playerTurn(player, dealer, deck, deckIndex)
+    playerScore = player.calculateScore()
+
+    printBoard(player, dealer, False)
+
+    if playerScore <= 21:
+        dealerTurn(dealer, playerScore, deck, deckIndex)
+        dealerScore = dealer.calculateScore()
+
+        printBoard(player, dealer, False)
+
+        if dealerScore >= playerScore and dealerScore <= 21:
+            print("The dealer wins!")
+        else:
+            print("The player wins!")
+    else:
+        print("The dealer wins!")
+
+    playing = askForAnotherGame()

@@ -1,15 +1,35 @@
-class Dealer():
+from generic_player import GenericPlayer
+
+
+class Dealer(GenericPlayer):
     def __init__(self) -> None:
-        self.cards = []
+        GenericPlayer.__init__(self)
 
-    def calculateScore(self) -> int:
-        aces = list(filter(lambda card: card.name.__contains__("A"), self.cards))
-        sum = 0
+    def __str__(self) -> str:
+        return "Dealer: \n" + super().__str__() + "\n"
 
-        for card in self.cards:
-            sum += card.value
+    def hiddenPrint(self) -> str:
+        result = ""
+        for i in range(4):
+            for (index, card) in enumerate(self.cards):
+                if i==0:
+                    result += " ____     "
+                elif i==1:
+                    result += "|    |    "
+                elif i==2:
+                    if index == 1:
+                        result += "| NO |    "
+                    else:
+                        result += f"| {card.name} |    " if len(card.name) == 2 else f"|{card.name} |    "
+                elif i==3:
+                    result += "|____|    "
+            
+            result += "\n"
+        
+        result += f"Score: {self.hiddenScore()}"
 
-        if len(aces) > 0 and sum + 10 <= 21:
-            sum += 10
+        return result
 
-        return sum
+
+    def hiddenScore(self) -> int:
+        return self.cards[0].value if not self.cards[0].name.__contains__("A") else 11

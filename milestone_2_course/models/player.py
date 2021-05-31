@@ -1,15 +1,9 @@
-class Player():
+from generic_player import GenericPlayer
+
+
+class Player(GenericPlayer):
     def __init__(self) -> None:
-        self.cards = []
+        GenericPlayer.__init__(self)
 
-    def calculateScore(self) -> int:
-        aces = list(filter(lambda card: card.name.__contains__("A"), self.cards))
-        sum = 0
-
-        for card in self.cards:
-            sum += card.value
-
-        if len(aces) > 0 and sum + 10 <= 21:
-            sum += 10
-
-        return sum
+    def __str__(self) -> str:
+        return "Player: \n" + super().__str__() + "\n"
